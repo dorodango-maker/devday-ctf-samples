@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon ./bin/www",
-    "start": "node ./bin/www"
+    "start": "nodemon ./bin/www",
+    "build": "npx tsc",
+    "build:watch": "npx tsc -w",
+    "dev": "yarn run build:watch & yarn start"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
