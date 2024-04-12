@@ -154,6 +154,12 @@ section .signin .content .form .inputBox i {
   cursor: pointer;
 }
 
+.error, .inputBox p {
+  color: #ff686b;
+  font-size: 0.8em;
+  margin-top: 5px;
+}
+
 input[type="submit"]:active {
   opacity: 0.6;
 }
