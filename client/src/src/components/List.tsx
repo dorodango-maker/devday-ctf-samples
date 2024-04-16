@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { FaSearch } from "react-icons/fa";
 
 type Item = {
   id: number;
@@ -16,6 +17,7 @@ const initialItems: Item[] = [
 
 const List: React.FC = () => {
   const [items, setItems] = useState<Item[]>(initialItems);
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Item;
     direction: string;
@@ -43,27 +45,72 @@ const List: React.FC = () => {
     setItems(sortedItems);
   };
 
+  const filteredItems = items.filter(
+    (item) =>
+      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.admin.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Container>
+      <SearchContainer>
+        <InputGroup>
+          <Input
+            type="text"
+            placeholder="Search items..."
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <Button>
+            <FaSearch />
+          </Button>
+        </InputGroup>
+      </SearchContainer>
       <Table>
         <TableHeader>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("id")}>Id</FilterLink>
-          </HeaderItem>
-          <HeaderItem>
-            <FilterLink onClick={() => sortItems("title")}>Title</FilterLink>
-          </HeaderItem>
-          <HeaderItem>
-            <FilterLink onClick={() => sortItems("summary")}>
-              Summary
+            <FilterLink onClick={() => sortItems("id")}>
+              Id{" "}
+              {sortConfig?.key === "id"
+                ? sortConfig.direction === "ascending"
+                  ? "▲"
+                  : "▼"
+                : ""}
             </FilterLink>
           </HeaderItem>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("admin")}>Admin</FilterLink>
+            <FilterLink onClick={() => sortItems("title")}>
+              Title{" "}
+              {sortConfig?.key === "title"
+                ? sortConfig.direction === "ascending"
+                  ? "▲"
+                  : "▼"
+                : ""}
+            </FilterLink>
+          </HeaderItem>
+          <HeaderItem>
+            <FilterLink onClick={() => sortItems("summary")}>
+              Summary{" "}
+              {sortConfig?.key === "summary"
+                ? sortConfig.direction === "ascending"
+                  ? "▲"
+                  : "▼"
+                : ""}
+            </FilterLink>
+          </HeaderItem>
+          <HeaderItem>
+            <FilterLink onClick={() => sortItems("admin")}>
+              Admin{" "}
+              {sortConfig?.key === "admin"
+                ? sortConfig.direction === "ascending"
+                  ? "▲"
+                  : "▼"
+                : ""}
+            </FilterLink>
           </HeaderItem>
         </TableHeader>
         <TableContent>
-          {items.map((item, index) => (
+          {filteredItems.map((item, index) => (
             <TableRow key={index}>
               <TableData>{item.id}</TableData>
               <TableData>{item.title}</TableData>
@@ -80,9 +127,42 @@ const List: React.FC = () => {
 const Container = styled.div`
   padding: 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
+`;
+
+const SearchContainer = styled.div`
+  width: 100%;
+  margin: 50px auto;
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  position: relative;
+`;
+
+const Input = styled.input`
+  flex: 1;
+  padding-left: 2.375rem;
+  padding: 10px;
+  border: 1px solid #ccc;
+`;
+
+const Button = styled.button`
+  padding: 10px;
+  border: none;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+`;
+
+const Icon = styled.i`
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
 `;
 
 const Table = styled.div`
