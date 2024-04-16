@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/List.css";
+import styled from "styled-components";
 
 type Item = {
   id: number;
@@ -44,67 +44,97 @@ const List: React.FC = () => {
   };
 
   return (
-    <div className="container">
-      <div className="table">
-        <div className="table-header">
-          <div className="header__item">
-            <a
-              href="#"
-              onClick={() => sortItems("id")}
-              className={`filter__link ${
-                sortConfig?.key === "id" ? sortConfig.direction : ""
-              }`}
-            >
-              Id
-            </a>
-          </div>
-          <div className="header__item">
-            <a
-              href="#"
-              onClick={() => sortItems("title")}
-              className={`filter__link ${
-                sortConfig?.key === "title" ? sortConfig.direction : ""
-              }`}
-            >
-              Title
-            </a>
-          </div>
-          <div className="header__item">
-            <a
-              href="#"
-              onClick={() => sortItems("summary")}
-              className={`filter__link ${
-                sortConfig?.key === "summary" ? sortConfig.direction : ""
-              }`}
-            >
+    <Container>
+      <Table>
+        <TableHeader>
+          <HeaderItem>
+            <FilterLink onClick={() => sortItems("id")}>Id</FilterLink>
+          </HeaderItem>
+          <HeaderItem>
+            <FilterLink onClick={() => sortItems("title")}>Title</FilterLink>
+          </HeaderItem>
+          <HeaderItem>
+            <FilterLink onClick={() => sortItems("summary")}>
               Summary
-            </a>
-          </div>
-          <div className="header__item">
-            <a
-              href="#"
-              onClick={() => sortItems("admin")}
-              className={`filter__link ${
-                sortConfig?.key === "admin" ? sortConfig.direction : ""
-              }`}
-            >
-              Admin
-            </a>
-          </div>
-        </div>
-        <div className="table-content">
+            </FilterLink>
+          </HeaderItem>
+          <HeaderItem>
+            <FilterLink onClick={() => sortItems("admin")}>Admin</FilterLink>
+          </HeaderItem>
+        </TableHeader>
+        <TableContent>
           {items.map((item, index) => (
-            <div className="table-row" key={index}>
-              <div className="table-data">{item.id}</div>
-              <div className="table-data">{item.title}</div>
-              <div className="table-data">{item.summary}</div>
-              <div className="table-data">{item.admin}</div>
-            </div>
+            <TableRow key={index}>
+              <TableData>{item.id}</TableData>
+              <TableData>{item.title}</TableData>
+              <TableData>{item.summary}</TableData>
+              <TableData>{item.admin}</TableData>
+            </TableRow>
           ))}
-        </div>
-      </div>
-    </div>
+        </TableContent>
+      </Table>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+`;
+
+const Table = styled.div`
+  width: 100%;
+  border: 1px solid #ccc;
+`;
+
+const TableHeader = styled.div`
+  display: flex;
+  width: 100%;
+  background: #333;
+  color: #fff;
+  padding: 12px 0;
+`;
+
+const TableRow = styled.div`
+  display: flex;
+  width: 100%;
+  background: #fff;
+  padding: 12px 0;
+
+  &:nth-of-type(odd) {
+    background: #f8f8f8;
+  }
+`;
+
+const TableData = styled.div`
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+`;
+
+const HeaderItem = styled.div`
+  flex: 1;
+  text-align: center;
+  padding: 0 10px;
+  text-transform: uppercase;
+`;
+
+const FilterLink = styled.a`
+  color: white;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const TableContent = styled.div`
+  width: 100%;
+`;
 
 export default List;

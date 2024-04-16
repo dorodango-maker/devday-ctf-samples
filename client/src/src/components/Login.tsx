@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
+import styled, { keyframes } from "styled-components";
 
 type Inputs = {
-  username: string;
+  userid: number;
   password: string;
 };
 
@@ -44,52 +44,170 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
-    if (data.username === "user" && data.password === "password") {
-      navigate("/Top");
+    if (data.userid === 1 && data.password === "password") {
+      navigate("/List");
     } else {
-      setErrorMsg("Incorrect username or password.");
+      setErrorMsg("Incorrect userid or password.");
     }
   };
 
   return (
-    <section>
+    <Section>
       {Array.from({ length: spanCount }).map((_, index) => (
-        <span key={index}></span>
+        <Span key={index}></Span>
       ))}
-
-      <div className="signin">
-        <div className="content">
+      <Signin>
+        <Content>
           <h2>Sign In</h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="form">
-            <div className="inputBox">
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <InputBox>
               <input
                 type="text"
                 required
-                {...register("username", { required: "Username is required" })}
+                placeholder="userid"
+                {...register("userid", { required: "userid is required" })}
               />
-              <i>Username</i>
-              <ErrorMessage errors={errors} name="username" as={<p />} />
-            </div>
-            <div className="inputBox">
+              <ErrorMessage errors={errors} name="userid" as={<p />} />
+            </InputBox>
+            <InputBox>
               <input
                 type="password"
                 required
+                placeholder="password"
                 {...register("password", { required: "Password is required" })}
               />
-              <i>Password</i>
               <ErrorMessage errors={errors} name="password" as={<p />} />
-            </div>
-            <div className="links">
-              <a href="#">Forgot Password</a>
-              <a href="#">Signup</a>
-            </div>
-            <div className="inputBox">
+            </InputBox>
+            <InputBox>
               <input type="submit" value="Login" />
-            </div>
-            {errorMsg && <div className="error">{errorMsg}</div>}
-          </form>
-        </div>
-      </div>
-    </section>
+            </InputBox>
+            {errorMsg && <Error>{errorMsg}</Error>}
+          </Form>
+        </Content>
+      </Signin>
+    </Section>
   );
 }
+
+const Section = styled.section`
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  overflow: hidden;
+  background: #000;
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(#000, #0f0, #000);
+    animation: ${keyframes`
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    `} 5s linear infinite;
+  }
+`;
+
+const Span = styled.span`
+  position: relative;
+  display: block;
+  width: calc(5vw - 2px);
+  height: calc(5vw - 2px);
+  background: #181818;
+  z-index: 2;
+  transition: 1.5s;
+  &:hover {
+    background: #0f0;
+    transition: 0s;
+  }
+`;
+
+const Signin = styled.div`
+  position: absolute;
+  width: 400px;
+  background: #222;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  border-radius: 4px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+`;
+
+const Content = styled.div`
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+  h2 {
+    font-size: 2em;
+    color: #0f0;
+    text-transform: uppercase;
+  }
+`;
+
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+`;
+
+const InputBox = styled.div`
+  position: relative;
+  width: 100%;
+  input {
+    width: 100%;
+    background: #333;
+    border: none;
+    outline: none;
+    padding: 25px 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1em;
+    ::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: #aaa;
+      opacity: 1; /* Firefox */
+    }
+    :-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: #aaa;
+    }
+    ::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: #aaa;
+    }
+  }
+  i {
+    position: absolute;
+    left: 0;
+    padding: 15px 10px;
+    font-style: normal;
+    color: #aaa;
+    transition: 0.5s;
+    pointer-events: none;
+  }
+  input:focus ~ i,
+  input:valid ~ i {
+    transform: translateY(-7.5px);
+    font-size: 0.8em;
+    color: #fff;
+  }
+`;
+
+const Error = styled.div`
+  color: #ff686b;
+  font-size: 0.8em;
+  margin-top: 5px;
+`;
