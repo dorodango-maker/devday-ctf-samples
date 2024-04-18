@@ -14,6 +14,7 @@ const List: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [executeSearch, setExecuteSearch] = useState(false); // 新しい状態変数
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Item;
     direction: string;
@@ -25,7 +26,7 @@ const List: React.FC = () => {
     } else {
       fetchItems();
     }
-  }, [navigate, searchTerm]);
+  }, [navigate, searchTerm, executeSearch]); // executeSearchを依存関係に追加
 
   const fetchItems = async () => {
     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3333";
@@ -50,41 +51,24 @@ const List: React.FC = () => {
     }
   };
 
-  const sortItems = (key: keyof Item) => {
-    let direction = "ascending";
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "ascending"
-    ) {
-      direction = "descending";
-    }
-    const sortedItems = [...items].sort((a, b) => {
-      if (a[key] < b[key]) {
-        return direction === "ascending" ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return direction === "ascending" ? 1 : -1;
-      }
-      return 0;
-    });
-    setSortConfig({ key, direction });
-    setItems(sortedItems);
+  const handleSearch = () => {
+    setExecuteSearch(true); // 検索を実行するために状態を更新
   };
 
   const useSimulateXSS = (htmlString: string) => {
     const divRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-      if (!divRef.current) {
+      if (!divRef.current || !executeSearch) {
         return;
       }
 
       const fragment = document.createRange().createContextualFragment(htmlString);
       divRef.current.appendChild(fragment);
-    }, [htmlString]);
+      setExecuteSearch(false); // 実行後に状態をリセット
+    }, [htmlString, executeSearch]);
 
-    return <div ref={divRef} />;
+    return <div ref={divRef} style={{ display: executeSearch ? 'block' : 'none' }} />;
   };
 
   return (
@@ -96,7 +80,7 @@ const List: React.FC = () => {
             placeholder="Search items..."
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Button>
+          <Button onClick={handleSearch}>
             <FaSearch />
           </Button>
         </InputGroup>
@@ -105,7 +89,7 @@ const List: React.FC = () => {
       <Table>
         <TableHeader>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("id")}>
+            <FilterLink>
               Id{" "}
               {sortConfig?.key === "id"
                 ? sortConfig.direction === "ascending"
@@ -115,7 +99,7 @@ const List: React.FC = () => {
             </FilterLink>
           </HeaderItem>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("title")}>
+            <FilterLink>
               Title{" "}
               {sortConfig?.key === "title"
                 ? sortConfig.direction === "ascending"
@@ -125,7 +109,7 @@ const List: React.FC = () => {
             </FilterLink>
           </HeaderItem>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("summary")}>
+            <FilterLink>
               Summary{" "}
               {sortConfig?.key === "summary"
                 ? sortConfig.direction === "ascending"
@@ -135,8 +119,8 @@ const List: React.FC = () => {
             </FilterLink>
           </HeaderItem>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("user_id")}>
-              user_id{" "}
+            <FilterLink>
+              User ID{" "}
               {sortConfig?.key === "user_id"
                 ? sortConfig.direction === "ascending"
                   ? "▲"
