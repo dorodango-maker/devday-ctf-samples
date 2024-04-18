@@ -10,12 +10,6 @@ type Item = {
   user_id: number;
 };
 
-declare global {
-  interface Window {
-    hint?: () => void;
-  }
-}
-
 const List: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
@@ -24,17 +18,6 @@ const List: React.FC = () => {
     key: keyof Item;
     direction: 'ascending' | 'descending';
   } | null>(null);
-
-  const hint = () => {
-    console.log("/admin から始まる管理画面があるのはここだけの秘密な!");
-  };
-
-  useEffect(() => {
-    window.hint = hint;
-    return () => {
-      delete window.hint;
-    };
-  }, []);
 
   useEffect(() => {
     if (!sessionStorage.getItem("userId")) {
