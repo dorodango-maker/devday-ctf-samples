@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -20,36 +20,43 @@ const List: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (!sessionStorage.getItem('userId')) {
-      navigate('/login');
+    if (!sessionStorage.getItem("userId")) {
+      navigate("/login");
     } else {
       fetchItems();
     }
   }, [navigate, searchTerm]);
 
   const fetchItems = async () => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3333';
+    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3333";
     try {
-      const response = await fetch(`${apiUrl}/api/list?search=${encodeURIComponent(searchTerm)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `${apiUrl}/api/list?search=${encodeURIComponent(searchTerm)}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (response.ok) {
         const data = await response.json();
         setItems(data.data);
       } else {
-        console.error('Failed to fetch items');
+        console.error("Failed to fetch items");
       }
     } catch (error) {
-      console.error('Error fetching items:', error);
+      console.error("Error fetching items:", error);
     }
   };
 
   const sortItems = (key: keyof Item) => {
     let direction = "ascending";
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === "ascending") {
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "ascending"
+    ) {
       direction = "descending";
     }
     const sortedItems = [...items].sort((a, b) => {
@@ -65,6 +72,21 @@ const List: React.FC = () => {
     setItems(sortedItems);
   };
 
+  const useSimulateXSS = (htmlString: string) => {
+    const divRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (!divRef.current) {
+        return;
+      }
+
+      const fragment = document.createRange().createContextualFragment(htmlString);
+      divRef.current.appendChild(fragment);
+    }, [htmlString]);
+
+    return <div ref={divRef} />;
+  };
+
   return (
     <Container>
       <SearchContainer>
@@ -78,6 +100,7 @@ const List: React.FC = () => {
             <FaSearch />
           </Button>
         </InputGroup>
+        {useSimulateXSS(searchTerm)}
       </SearchContainer>
       <Table>
         <TableHeader>
