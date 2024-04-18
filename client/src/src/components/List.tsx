@@ -28,7 +28,7 @@ const List: React.FC = () => {
   } | null>(null);
 
   const hint = () => {
-    console.log("/admin画面が存在する");
+    console.log("/admin から始まる管理画面があるのはここだけの秘密な!");
   };
 
   // hint 関数を window オブジェクトに追加
