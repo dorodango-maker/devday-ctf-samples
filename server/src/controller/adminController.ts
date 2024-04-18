@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import mysql from "mysql";
 import config from "../config/db";
 
-// MySQL データベースへの接続設定
 const connection = mysql.createConnection({
     host: config.db.host,
     port: config.db.port,
@@ -24,15 +23,14 @@ export default {
             return res.status(400).json({ success: false, message: 'ID and password are required.' });
         }
 
-        // データベースでユーザーを検索
-        const query = 'SELECT * FROM admin_users WHERE name = ? AND password = ?';
-        connection.query(query, [username, password], (err, results) => {
+        // SQLインジェクションが可能なクエリ
+        const query = `SELECT * FROM admin_users WHERE name = '${username}' AND password = '${password}'`;
+        connection.query(query, (err, results) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ success: false, message: 'An error occurred while querying the database.' });
+                return res.status(500).json({ success: false, message: 'データベースのクエリ中にエラーが発生しました。' });
             }
 
-            // ユーザーが見つかれば認証成功
             if (results.length > 0) {
                 res.json({ success: true, message: 'Authentication successful.', data: { userId: results[0].id } });
             } else {
