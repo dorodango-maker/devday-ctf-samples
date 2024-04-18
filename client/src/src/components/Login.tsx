@@ -55,7 +55,7 @@ export default function Login() {
 
       if (response.ok) {
         const result = await response.json();
-        navigate("/List");
+        navigate("/list");
       } else {
         setErrorMsg("Incorrect username or password.");
       }
