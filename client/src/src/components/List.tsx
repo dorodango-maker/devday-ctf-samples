@@ -10,7 +10,6 @@ type Item = {
   user_id: number;
 };
 
-// window オブジェクトの型拡張
 declare global {
   interface Window {
     hint?: () => void;
@@ -21,7 +20,7 @@ const List: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [executeSearch, setExecuteSearch] = useState(false); // 新しい状態変数
+  const [executeSearch, setExecuteSearch] = useState(false);
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Item;
     direction: string;
@@ -31,11 +30,10 @@ const List: React.FC = () => {
     console.log("/admin から始まる管理画面があるのはここだけの秘密な!");
   };
 
-  // hint 関数を window オブジェクトに追加
   useEffect(() => {
     window.hint = hint;
     return () => {
-      delete window.hint; // コンポーネントのアンマウント時に関数を削除
+      delete window.hint;
     };
   }, []);
 
@@ -45,7 +43,7 @@ const List: React.FC = () => {
     } else {
       fetchItems();
     }
-  }, [navigate, searchTerm, executeSearch]); // executeSearchを依存関係に追加
+  }, [navigate, searchTerm, executeSearch]);
 
   const fetchItems = async () => {
     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3333";
@@ -71,7 +69,7 @@ const List: React.FC = () => {
   };
 
   const handleSearch = () => {
-    setExecuteSearch(true); // 検索を実行するために状態を更新
+    setExecuteSearch(true);
   };
 
   const useSimulateXSS = (htmlString: string) => {
