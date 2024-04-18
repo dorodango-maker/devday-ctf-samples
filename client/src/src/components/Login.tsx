@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 
 type Inputs = {
-  userid: number;
+  username: string;
   password: string;
 };
 
@@ -44,10 +44,10 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
-    if (data.userid === 1 && data.password === "password") {
+    if (data.username === "test" && data.password === "test") {
       navigate("/List");
     } else {
-      setErrorMsg("Incorrect userid or password.");
+      setErrorMsg("Incorrect username or password.");
     }
   };
 
@@ -64,10 +64,10 @@ export default function Login() {
               <input
                 type="text"
                 required
-                placeholder="userid"
-                {...register("userid", { required: "userid is required" })}
+                placeholder="username"
+                {...register("username", { required: "username is required" })}
               />
-              <ErrorMessage errors={errors} name="userid" as={StyledError} />
+              <ErrorMessage errors={errors} name="username" as={StyledError} />
             </InputBox>
             <InputBox>
               <input
