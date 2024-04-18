@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 type Item = {
   id: number;
@@ -16,6 +17,14 @@ const initialItems: Item[] = [
 ];
 
 const List: React.FC = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // ユーザーIDがセッションストレージにない場合はログインページにリダイレクト
+    if (!sessionStorage.getItem('userId')) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
   const [items, setItems] = useState<Item[]>(initialItems);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{

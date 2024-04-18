@@ -55,6 +55,8 @@ export default function Login() {
 
       if (response.ok) {
         const result = await response.json();
+        // ログイン成功時にユーザーIDをセッションストレージに保存
+        sessionStorage.setItem('userId', result.data.userId);
         navigate("/list");
       } else {
         setErrorMsg("Incorrect username or password.");
