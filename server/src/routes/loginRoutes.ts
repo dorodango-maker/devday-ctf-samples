@@ -6,4 +6,3 @@ const router = Express.Router()
 router.post('/', loginController.login)
 
 export default router
-
