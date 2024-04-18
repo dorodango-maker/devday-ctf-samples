@@ -20,8 +20,8 @@ const List: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (!sessionStorage.getItem("userId")) {
-      navigate("/login");
+    if (!sessionStorage.getItem("adminUserId")) {
+      navigate("/admin/login");
     } else {
       fetchItems();
     }
@@ -31,7 +31,7 @@ const List: React.FC = () => {
     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3333";
     try {
       const response = await fetch(
-        `${apiUrl}/api/list?search=${encodeURIComponent(searchTerm)}`,
+        `${apiUrl}/api/admin/home?search=${encodeURIComponent(searchTerm)}`,
         {
           method: "GET",
           headers: {

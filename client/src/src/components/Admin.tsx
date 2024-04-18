@@ -45,7 +45,7 @@ export default function Admin() {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3333";
     try {
-      const response = await fetch(`${apiUrl}/api/login`, {
+      const response = await fetch(`${apiUrl}/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,8 +56,8 @@ export default function Admin() {
       if (response.ok) {
         const result = await response.json();
         // ログイン成功時にユーザーIDをセッションストレージに保存
-        sessionStorage.setItem("userId", result.data.userId);
-        navigate("/list");
+        sessionStorage.setItem("adminUserId", result.data.adminUserId);
+        navigate("/admin/home");
       } else {
         setErrorMsg("Incorrect username or password.");
       }
@@ -218,7 +218,7 @@ const InputBox = styled.div`
     }
   }
   i {
-    position:absolute;
+    position: absolute;
     left: 0;
     padding: 15px 10px;
     font-style: normal;
