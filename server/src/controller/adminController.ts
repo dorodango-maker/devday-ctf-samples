@@ -40,8 +40,8 @@ export default {
     },
     getList: (req: Request, res: Response) => {
         const searchTerm = req.query.search || '';
-        const query = 'SELECT * FROM admin_books WHERE title LIKE ? OR summary LIKE ?';
-        connection.query(query, [`%${searchTerm}%`, `%${searchTerm}%`], (err, results) => {
+        const query = `SELECT * FROM admin_books WHERE title LIKE '%${searchTerm}%'`;
+        connection.query(query, (err, results) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ success: false, message: 'データベースのクエリ中にエラーが発生しました。' });
