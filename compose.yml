@@ -6,8 +6,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: mydb
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     ports:
       - '3666:3306'
+    volumes:
+      - db-data:/var/lib/mysql
   server:
     container_name: server
     image: node:16
@@ -18,7 +22,7 @@ services:
     volumes:
       - ./server/src:/app
     working_dir: /app
-    command: sh -c 'yarn start'
+    command: sh -c 'apt-get update && apt-get install -y default-mysql-client && yarn start'
   client:
     container_name: client
     image: node:16
@@ -31,3 +35,5 @@ services:
       - ./client/src:/app
     working_dir: /app
     command: sh -c 'yarn start'
+volumes:
+  db-data:
