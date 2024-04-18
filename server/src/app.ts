@@ -21,7 +21,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ルーティングの設定
-app.use('/', indexRouter);
+app.use('/api', indexRouter);
 
 // 404エラーハンドリング
 app.use((req, res, next) => {
