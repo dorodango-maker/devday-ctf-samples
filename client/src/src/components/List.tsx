@@ -10,6 +10,13 @@ type Item = {
   user_id: number;
 };
 
+// window オブジェクトの型拡張
+declare global {
+  interface Window {
+    hint?: () => void;
+  }
+}
+
 const List: React.FC = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState<Item[]>([]);
@@ -19,6 +26,18 @@ const List: React.FC = () => {
     key: keyof Item;
     direction: string;
   } | null>(null);
+
+  const hint = () => {
+    console.log("/admin画面が存在する");
+  };
+
+  // hint 関数を window オブジェクトに追加
+  useEffect(() => {
+    window.hint = hint;
+    return () => {
+      delete window.hint; // コンポーネントのアンマウント時に関数を削除
+    };
+  }, []);
 
   useEffect(() => {
     if (!sessionStorage.getItem("userId")) {
@@ -63,12 +82,16 @@ const List: React.FC = () => {
         return;
       }
 
-      const fragment = document.createRange().createContextualFragment(htmlString);
+      const fragment = document
+        .createRange()
+        .createContextualFragment(htmlString);
       divRef.current.appendChild(fragment);
       setExecuteSearch(false); // 実行後に状態をリセット
     }, [htmlString, executeSearch]);
 
-    return <div ref={divRef} style={{ display: executeSearch ? 'block' : 'none' }} />;
+    return (
+      <div ref={divRef} style={{ display: executeSearch ? "block" : "none" }} />
+    );
   };
 
   return (
