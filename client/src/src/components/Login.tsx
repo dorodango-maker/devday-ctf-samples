@@ -67,7 +67,7 @@ export default function Login() {
                 placeholder="userid"
                 {...register("userid", { required: "userid is required" })}
               />
-              <ErrorMessage errors={errors} name="userid" as={<p />} />
+              <ErrorMessage errors={errors} name="userid" as={StyledError} />
             </InputBox>
             <InputBox>
               <input
@@ -76,7 +76,7 @@ export default function Login() {
                 placeholder="password"
                 {...register("password", { required: "Password is required" })}
               />
-              <ErrorMessage errors={errors} name="password" as={<p />} />
+              <ErrorMessage errors={errors} name="password" as={StyledError} />
             </InputBox>
             <InputBox>
               <input type="submit" value="Login" />
@@ -176,18 +176,30 @@ const InputBox = styled.div`
     font-weight: 500;
     font-size: 1em;
     ::placeholder {
-      /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: #aaa;
-      opacity: 1; /* Firefox */
+      opacity: 1;
     }
     :-ms-input-placeholder {
-      /* Internet Explorer 10-11 */
       color: #aaa;
     }
     ::-ms-input-placeholder {
-      /* Microsoft Edge */
       color: #aaa;
     }
+  }
+  input[type="submit"] {
+    background: #0f0; /* Green background */
+    color: #000; /* Black text color */
+    font-weight: 600;
+    font-size: 1.35em;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.2s;
+  }
+  input[type="submit"]:hover {
+    background-color: #0c0; /* Slightly darker green */
+  }
+  input[type="submit"]:active {
+    opacity: 0.6;
   }
   i {
     position: absolute;
@@ -204,6 +216,12 @@ const InputBox = styled.div`
     font-size: 0.8em;
     color: #fff;
   }
+`;
+
+const StyledError = styled.p`
+  color: #ff686b;
+  font-size: 0.8em;
+  margin-top: 5px;
 `;
 
 const Error = styled.div`
