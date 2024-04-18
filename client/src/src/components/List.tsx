@@ -7,38 +7,49 @@ type Item = {
   id: number;
   title: string;
   summary: string;
-  admin: string;
+  user_id: number;
 };
-
-const initialItems: Item[] = [
-  { id: 1, title: "Item 1", summary: "This is item 1", admin: "admin1" },
-  { id: 2, title: "Item 2", summary: "This is item 2", admin: "admin2" },
-  { id: 3, title: "Item 3", summary: "This is item 3", admin: "admin3" },
-];
 
 const List: React.FC = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-    // ユーザーIDがセッションストレージにない場合はログインページにリダイレクト
-    if (!sessionStorage.getItem('userId')) {
-      navigate('/login');
-    }
-  }, [navigate]);
-
-  const [items, setItems] = useState<Item[]>(initialItems);
+  const [items, setItems] = useState<Item[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Item;
     direction: string;
   } | null>(null);
 
+  useEffect(() => {
+    if (!sessionStorage.getItem('userId')) {
+      navigate('/login');
+    } else {
+      fetchItems();
+    }
+  }, [navigate, searchTerm]);
+
+  const fetchItems = async () => {
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3333';
+    try {
+      const response = await fetch(`${apiUrl}/api/list?search=${encodeURIComponent(searchTerm)}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setItems(data.data);
+      } else {
+        console.error('Failed to fetch items');
+      }
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    }
+  };
+
   const sortItems = (key: keyof Item) => {
     let direction = "ascending";
-    if (
-      sortConfig &&
-      sortConfig.key === key &&
-      sortConfig.direction === "ascending"
-    ) {
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
     }
     const sortedItems = [...items].sort((a, b) => {
@@ -53,13 +64,6 @@ const List: React.FC = () => {
     setSortConfig({ key, direction });
     setItems(sortedItems);
   };
-
-  const filteredItems = items.filter(
-    (item) =>
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.admin.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <Container>
@@ -108,9 +112,9 @@ const List: React.FC = () => {
             </FilterLink>
           </HeaderItem>
           <HeaderItem>
-            <FilterLink onClick={() => sortItems("admin")}>
-              Admin{" "}
-              {sortConfig?.key === "admin"
+            <FilterLink onClick={() => sortItems("user_id")}>
+              user_id{" "}
+              {sortConfig?.key === "user_id"
                 ? sortConfig.direction === "ascending"
                   ? "▲"
                   : "▼"
@@ -119,12 +123,12 @@ const List: React.FC = () => {
           </HeaderItem>
         </TableHeader>
         <TableContent>
-          {filteredItems.map((item, index) => (
+          {items.map((item, index) => (
             <TableRow key={index}>
               <TableData>{item.id}</TableData>
               <TableData>{item.title}</TableData>
               <TableData>{item.summary}</TableData>
-              <TableData>{item.admin}</TableData>
+              <TableData>{item.user_id}</TableData>
             </TableRow>
           ))}
         </TableContent>
