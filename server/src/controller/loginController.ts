@@ -19,25 +19,25 @@ connection.connect(err => {
 // IDとパスワードで認証を行う
 export default {
     login: (req: Request, res: Response) => {
-        const { id, password } = req.body;
+        const { username, password } = req.body;
 
-        if (!id || !password) {
-            return res.status(400).send('ID and password are required.');
+        if (!username || !password) {
+            return res.status(400).json({ success: false, message: 'ID and password are required.' });
         }
 
         // データベースでユーザーを検索
-        const query = 'SELECT * FROM users WHERE id = ? AND password = ?';
-        connection.query(query, [id, password], (err, results) => {
+        const query = 'SELECT * FROM users WHERE name = ? AND password = ?';
+        connection.query(query, [username, password], (err, results) => {
             if (err) {
                 console.error(err);
-                return res.status(500).send('An error occurred while querying the database.');
+                return res.status(500).json({ success: false, message: 'An error occurred while querying the database.' });
             }
 
             // ユーザーが見つかれば認証成功
             if (results.length > 0) {
-                res.send('Authentication successful.');
+                res.json({ success: true, message: 'Authentication successful.', data: { userId: results[0].id } });
             } else {
-                res.status(401).send('Authentication failed.');
+                res.status(401).json({ success: false, message: 'Authentication failed.' });
             }
         });
     },

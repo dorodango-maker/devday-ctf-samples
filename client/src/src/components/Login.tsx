@@ -42,12 +42,26 @@ export default function Login() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
-    if (data.username === "test" && data.password === "test") {
-      navigate("/List");
-    } else {
-      setErrorMsg("Incorrect username or password.");
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3333';
+    try {
+      const response = await fetch(`${apiUrl}/api/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        navigate("/List");
+      } else {
+        setErrorMsg("Incorrect username or password.");
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrorMsg("Login failed due to server error.");
     }
   };
 
