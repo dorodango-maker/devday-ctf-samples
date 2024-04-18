@@ -125,6 +125,7 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  background-color: #f0f8ff;
 `;
 
 const SearchContainer = styled.div`
