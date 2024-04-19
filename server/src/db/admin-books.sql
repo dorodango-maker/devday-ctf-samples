@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS admin_books (
 TRUNCATE TABLE admin_books;
 
 INSERT INTO admin_books (title, summary, user_id) VALUES
-('ようこそ', 'おいおい、ここは本来社員しか見れないページだぜ。。。', 1),
-('実践！メテオフォール型開発', 'メテオフォール型開発で神になる方法100選', 2),
-('入門DDD', 'さぁ、締め切り駆動開発を始めよう', 3),
-('shellgei', 'シェル芸が結構面白い', 4)
+('マジで最強のセキュリティ', '今までにないくらい堅牢なシステム', 1),
+('本番障害発生！ポストモーテムのはじめ方！', 'こないだボタン一撃で本番環境吹き飛ばすCI/CD作りました（ガチ）', 2),
+('絶対誰にも突破できないシステム', 'information_schemaを見たいだって...？', 4)

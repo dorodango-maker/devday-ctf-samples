@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
 TRUNCATE TABLE users;
 
 INSERT INTO users (name, password) VALUES
-('Alice', 'password123'),
+('CTO', '1234'),
 ('Bob', 'password2024'),
 ('Charlie', 'securePass'),
 ('David', 'myPass456'),
