@@ -31,7 +31,7 @@ const List: React.FC = () => {
     const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:3333";
     try {
       const response = await fetch(
-        `${apiUrl}/api/admin/home?search=${searchTerm}`,
+        `${apiUrl}/api/admin/home?search=${encodeURIComponent(searchTerm)}`,
         {
           method: "GET",
           headers: {
